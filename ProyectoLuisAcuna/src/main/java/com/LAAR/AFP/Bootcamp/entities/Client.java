@@ -4,6 +4,7 @@ import lombok.*;
 import javax.persistence.*;
 import java.io.Serializable;
 
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -22,13 +23,14 @@ public class Client{
     @Column(name = "lastName", nullable = false, length = 60)
     private String lastName;
     @Column(nullable = false, length = 8)
-    private String DNI;
+    private Integer DNI;
     @Column(name = "phone", nullable = false, length = 9)
-    private String phone;
+    private Integer phone;
     @Column(nullable = false , length = 100)
     private String email;
     @Column(nullable = false, length = 50)
     private String AFP;
-
+    @Column(nullable = false, length = 50)
+    private Number amountAvailable;
 
 }

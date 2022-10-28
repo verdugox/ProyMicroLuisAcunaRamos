@@ -12,6 +12,8 @@ public interface IClientService {
 
     Client findId(Integer id) throws Exception;
 
+    List<Client> getClientForAFP(String AFP) throws Exception;
+
     Client update(Client c, Integer id) throws Exception;
 
     void delete(Integer id) throws Exception;

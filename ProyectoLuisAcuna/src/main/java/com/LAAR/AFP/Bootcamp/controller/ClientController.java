@@ -15,29 +15,34 @@ public class ClientController {
     @Autowired
     private IClientService service;
 
-    @GetMapping()
+    @GetMapping("/findAll")
     public List<Client> findAll() throws Exception{
         return service.findAll();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/findId/{id}")
     public Client findId(@PathVariable("id") Integer id) throws  Exception{
         return service.findId(id);
     }
 
-    @PostMapping
+    @GetMapping("/ClientForAFP/{AFP}")
+    public List<Client> getClientForAFP(@PathVariable("AFP") String AFP) throws  Exception{
+        return service.getClientForAFP(AFP);
+    }
+
+    @PostMapping("/create")
     public Client create(@RequestBody Client client)throws Exception{
         return service.create(client);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     public Client update(@PathVariable("id") Integer id, @RequestBody Client client) throws Exception{
         return service.update(client, id);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public void delete(@PathVariable("id") Integer id) throws Exception{
-        service.delete(id);
+          service.delete(id);
     }
 
 

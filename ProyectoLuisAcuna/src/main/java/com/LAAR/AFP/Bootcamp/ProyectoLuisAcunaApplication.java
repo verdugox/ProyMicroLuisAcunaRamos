@@ -15,7 +15,7 @@ import java.lang.invoke.MethodHandles;
 public class ProyectoLuisAcunaApplication {
 
 	//SLF4J's Se logea e instancia la clase
-	//private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	//this is what SLF4J uses to bind to a specific loggin umple
 	public static void main(String[] args)
