@@ -30,6 +30,11 @@ public class ClientController {
         return service.getClientForAFP(AFP);
     }
 
+    @GetMapping("/ClientForDNI/{DNI}")
+    public List<Client> getClientForDNI(@PathVariable("DNI") Integer DNI) throws  Exception{
+        return service.getClientForDNI(DNI);
+    }
+
     @PostMapping("/create")
     public Client create(@RequestBody Client client)throws Exception{
         return service.create(client);

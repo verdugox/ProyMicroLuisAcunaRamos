@@ -44,6 +44,12 @@ public class ClientServiceImplement implements IClientService{
         return repository.getClientForAFP(AFP);
     }
 
+
+    @Override
+    public List<Client> getClientForDNI(Integer DNI) throws Exception {
+        return repository.getClientForDNI(DNI);
+    }
+
     @Override
     public Client update(Client c, Integer id) throws Exception {
         Optional<Client> optionalClient = repository.findById(id);

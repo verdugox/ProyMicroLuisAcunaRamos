@@ -16,4 +16,7 @@ public interface IClientRepository extends JpaRepository<Client, Integer> {
     @Query(value = "SELECT * FROM clients WHERE AFP = :AFP" ,nativeQuery = true)
     public List<Client> getClientForAFP(@Param("AFP") String AFP);
 
+    @Query(value = "SELECT * FROM clients WHERE DNI = :DNI" ,nativeQuery = true)
+    public List<Client> getClientForDNI(@Param("DNI") Integer DNI);
+
 }

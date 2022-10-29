@@ -31,6 +31,6 @@ public class Client{
     @Column(nullable = false, length = 50)
     private String AFP;
     @Column(nullable = false, length = 50)
-    private Number amountAvailable;
+    private Double amountAvailable;
 
 }

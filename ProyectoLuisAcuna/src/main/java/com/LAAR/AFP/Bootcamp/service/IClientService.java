@@ -13,6 +13,7 @@ public interface IClientService {
     Client findId(Integer id) throws Exception;
 
     List<Client> getClientForAFP(String AFP) throws Exception;
+    List<Client> getClientForDNI(Integer DNI) throws Exception;
 
     Client update(Client c, Integer id) throws Exception;
 
