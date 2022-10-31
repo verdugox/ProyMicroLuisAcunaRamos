@@ -1,0 +1,101 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > IClientRepository</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.LAAR.AFP.Bootcamp.repository</a>
+</div>
+
+<h1>Coverage Summary for Class: IClientRepository (com.LAAR.AFP.Bootcamp.repository)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+</tr>
+  <tr>
+    <td class="name">IClientRepository$MockitoMock$1248190913</td>
+  </tr>
+  <tr>
+    <td class="name">IClientRepository$MockitoMock$1248190913$auxiliary$8TxBbV4i</td>
+  </tr>
+  <tr>
+    <td class="name">IClientRepository$MockitoMock$1248190913$auxiliary$VYKJd80N</td>
+  </tr>
+  <tr>
+    <td class="name">IClientRepository$MockitoMock$1248190913$auxiliary$YdciYSnY</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.LAAR.AFP.Bootcamp.repository;
+&nbsp;
+&nbsp;
+&nbsp;import org.springframework.data.jpa.repository.JpaRepository;
+&nbsp;import org.springframework.data.jpa.repository.Query;
+&nbsp;import org.springframework.data.repository.query.Param;
+&nbsp;import org.springframework.stereotype.Repository;
+&nbsp;
+&nbsp;import com.LAAR.AFP.Bootcamp.entities.Client;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;@Repository
+&nbsp;public interface IClientRepository extends JpaRepository&lt;Client, Long&gt; {
+&nbsp;
+&nbsp;    @Query(value = &quot;SELECT * FROM clients WHERE AFP = :AFP&quot; ,nativeQuery = true)
+&nbsp;    public List&lt;Client&gt; getClientForAFP(@Param(&quot;AFP&quot;) String AFP);
+&nbsp;
+&nbsp;    @Query(value = &quot;SELECT * FROM clients WHERE DNI = :DNI&quot; ,nativeQuery = true)
+&nbsp;    public List&lt;Client&gt; getClientForDNI(@Param(&quot;DNI&quot;) Integer DNI);
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-10-30 23:39</div>
+</div>
+</body>
+</html>

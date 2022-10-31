@@ -2,11 +2,15 @@ package com.LAAR.AFP.Bootcamp.service;
 
 import com.LAAR.AFP.Bootcamp.entities.Client;
 import com.LAAR.AFP.Bootcamp.repository.IClientRepository;
-import lombok.extern.java.Log;
+import io.reactivex.Flowable;
+import io.reactivex.Maybe;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.invoke.MethodHandles;
 import java.util.List;
@@ -14,7 +18,7 @@ import java.util.Optional;
 
 
 @Service
-@Log
+@Slf4j
 public class ClientServiceImplement implements IClientService{
 
     //SLF4J's Se logea e instancia la clase
@@ -23,20 +27,43 @@ public class ClientServiceImplement implements IClientService{
     @Autowired
     private IClientRepository repository;
 
+    //@Value("${spring.application.workshop-test.test-param}")
+    String enviroment;
+
     @Override
     public Client create(Client c) throws Exception {
         return repository.save(c);
     }
 
+    //@Override
+    //public List<Client> findAll() throws Exception {
+    //    return repository.findAll();
+    ///}
+
     @Override
-    public List<Client> findAll() throws Exception {
-        return repository.findAll();
+    @Transactional(readOnly = true)
+    public Flowable<Client> findAll() {
+        log.info(String.format("Property: %s",enviroment));
+        return Flowable.fromIterable(repository.findAll());
     }
 
     @Override
-    public Client findId(Integer id) throws Exception {
-        Optional<Client> optionalClient = repository.findById(id);
-        return optionalClient.isPresent() ? optionalClient.get(): new Client();
+    @Transactional(readOnly = true)
+    public Maybe<Client> findById(Long id){
+        log.info("findId");
+        return Maybe.just(repository.findById(id).orElseGet(Client::new));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Maybe<Client> findByIdError(Long id){
+        log.info("findByIdError");
+        Optional<Client> client = repository.findById(id);
+        if(client.isPresent()){
+            return Maybe.just(client.get());
+        } else {
+            return Maybe.error(new Exception("Not Found"));
+        }
     }
 
     @Override
@@ -51,7 +78,7 @@ public class ClientServiceImplement implements IClientService{
     }
 
     @Override
-    public Client update(Client c, Integer id) throws Exception {
+    public Client update(Client c, Long id) throws Exception {
         Optional<Client> optionalClient = repository.findById(id);
         if(optionalClient.isPresent()){
             Client clientDB = optionalClient.get();
@@ -66,14 +93,14 @@ public class ClientServiceImplement implements IClientService{
             LOGGER.info("No se encuentra registrado el cliente {}");
             return repository.save(clientDB);
         }else {
-            log.severe("No se encuentra registrado el cliente {}\"");
+            log.error("No se encuentra registrado el cliente {}");
             LOGGER.error("No se encuentra registrado el cliente {}");
         }
         return new Client();
     }
 
     @Override
-    public void delete(Integer id) throws Exception {
+    public void delete(Long id) throws Exception {
         log.info("Se eliminó el usuario que tiene por ID: " +id);
         LOGGER.info("Se eliminó el usuario que tiene por ID: " +id);
         repository.deleteById(id);

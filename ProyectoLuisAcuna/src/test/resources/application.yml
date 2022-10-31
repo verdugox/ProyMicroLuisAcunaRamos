@@ -1,0 +1,4 @@
+spring:
+  application:
+    workshop-test:
+      test-param: Test

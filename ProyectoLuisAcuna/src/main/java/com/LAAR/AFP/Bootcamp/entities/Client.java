@@ -1,5 +1,6 @@
 package com.LAAR.AFP.Bootcamp.entities;
 
+import io.reactivex.observers.TestObserver;
 import lombok.*;
 import javax.persistence.*;
 import java.io.Serializable;
@@ -12,12 +13,14 @@ import java.io.Serializable;
 @Setter
 @Entity
 @Table(name = "clients")
-public class Client{
+public class Client implements Serializable{
+
+    private static final long serialVersionUID = 4080729130530523253L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idClient")
-    private Integer idClient;
+    private Long idClient;
     @Column(name = "firstName", nullable = false, length = 60)
     private String firstName;
     @Column(name = "lastName", nullable = false, length = 60)
