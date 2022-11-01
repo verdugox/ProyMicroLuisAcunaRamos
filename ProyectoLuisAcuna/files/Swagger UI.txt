@@ -1,0 +1,2 @@
+URL OPEN API V3 => http://localhost:8080/api-afp-docs
+URL SWAGGER UI => http://localhost:8080/swagger-ui/index.html
