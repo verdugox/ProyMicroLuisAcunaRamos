@@ -33,8 +33,10 @@ public class Client implements Serializable{
     @Size(min = 0, max = 60)
     @Column(name = "lastName", nullable = false, length = 60)
     private String lastName;
+    @NotNull
     @Column(nullable = false, length = 8)
     private Integer DNI;
+    @NotNull
     @Column(name = "phone", nullable = false, length = 9)
     private Integer phone;
     @NotBlank
@@ -45,6 +47,7 @@ public class Client implements Serializable{
     @Size(min = 0, max = 50)
     @Column(nullable = false, length = 50)
     private String AFP;
+    @NotNull
     @DecimalMax("10000000.00") @DecimalMin("0.0")
     @Column(nullable = false, length = 50)
     private Double amountAvailable;
