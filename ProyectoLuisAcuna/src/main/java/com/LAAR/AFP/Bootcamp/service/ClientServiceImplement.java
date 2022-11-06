@@ -9,12 +9,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 import java.lang.invoke.MethodHandles;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 
 @Service
@@ -30,9 +35,36 @@ public class ClientServiceImplement implements IClientService{
     //@Value("${spring.application.workshop-test.test-param}")
     String enviroment;
 
+
     @Override
     public Client create(Client c) throws Exception {
-        return repository.save(c);
+        List<Client> clientDNI = repository.getClientForDNI(c.getDNI().intValue());
+        Client[] ArrayClient = clientDNI.toArray(new Client[0]);
+        if(ArrayClient.length>0)
+        {
+            if(ArrayClient[0].getDNI().intValue() != c.getDNI().intValue())
+            {
+                if(c.getAFP().equals(ArrayClient[0].getAFP()))
+                {
+                    log.error("El usuario que intenta registrar, ya tiene afiliado un AFP" + ArrayClient[0].getAFP().toString());
+                    throw new DataIntegrityViolationException("El usuario que intenta registrar, ya tiene afiliado un AFP : " + ArrayClient[0].getAFP().toString()) ;
+                }
+                else{
+                    log.info("Se realizo el registro exitosamente");
+                    return repository.save(c);
+                }
+            }
+            else{
+                log.error("El cliente ya se encuentra registrado y vinculado al AFP con el DNI: " + ArrayClient[0].getDNI());
+                throw new DataIntegrityViolationException("El usuario que intenta registrar, ya tiene afiliado un AFP : " + ArrayClient[0].getAFP().toString()) ;
+
+            }
+        }
+        else{
+            return repository.save(c);
+        }
+
+
     }
 
     //@Override
