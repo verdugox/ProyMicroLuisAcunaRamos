@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.beans.factory.UnsatisfiedDependencyException;
 
 import java.util.List;
 
@@ -34,9 +33,6 @@ public class ClientController {
             @ApiResponse(responseCode = "404", description = "No se encontraron registros",
                     content = @Content) })
     @GetMapping("/findAll")
-    ///public List<Client> findAll() throws Exception{
-    //    return service.findAll();
-    //}
     public Maybe<ResponseEntity<Flowable<Client>>> list(){
         return Maybe.just(
                 ResponseEntity.ok()

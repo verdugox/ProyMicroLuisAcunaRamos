@@ -8,15 +8,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
 
 import java.lang.invoke.MethodHandles;
 import java.util.*;
@@ -42,35 +36,20 @@ public class ClientServiceImplement implements IClientService{
         Client[] ArrayClient = clientDNI.toArray(new Client[0]);
         if(ArrayClient.length>0)
         {
-            if(ArrayClient[0].getDNI().intValue() != c.getDNI().intValue())
+            if(ArrayClient[0].getDNI().equals(c.getDNI()))
             {
-                if(c.getAFP().equals(ArrayClient[0].getAFP()))
-                {
-                    log.error("El usuario que intenta registrar, ya tiene afiliado un AFP" + ArrayClient[0].getAFP().toString());
-                    throw new DataIntegrityViolationException("El usuario que intenta registrar, ya tiene afiliado un AFP : " + ArrayClient[0].getAFP().toString()) ;
-                }
-                else{
-                    log.info("Se realizo el registro exitosamente");
-                    return repository.save(c);
-                }
+                log.error("El usuario que intenta registrar, ya tiene afiliado un AFP:   " + ArrayClient[0].getAFP().toString());
+                throw new DataIntegrityViolationException("El usuario que intenta registrar, ya tiene afiliado un AFP : " + ArrayClient[0].getAFP().toString()) ;
             }
             else{
-                log.error("El cliente ya se encuentra registrado y vinculado al AFP con el DNI: " + ArrayClient[0].getDNI());
-                throw new DataIntegrityViolationException("El usuario que intenta registrar, ya tiene afiliado un AFP : " + ArrayClient[0].getAFP().toString()) ;
-
+                log.info("Se realizo el registro exitosamente");
+                return repository.save(c);
             }
         }
         else{
             return repository.save(c);
         }
-
-
     }
-
-    //@Override
-    //public List<Client> findAll() throws Exception {
-    //    return repository.findAll();
-    ///}
 
     @Override
     @Transactional(readOnly = true)
@@ -112,24 +91,56 @@ public class ClientServiceImplement implements IClientService{
     @Override
     public Client update(Client c, Long id) throws Exception {
         Optional<Client> optionalClient = repository.findById(id);
-        if(optionalClient.isPresent()){
-            Client clientDB = optionalClient.get();
-            clientDB.setFirstName(c.getFirstName());
-            clientDB.setLastName(c.getLastName());
-            clientDB.setDNI(c.getDNI());
-            clientDB.setPhone(c.getPhone());
-            clientDB.setEmail(c.getEmail());
-            clientDB.setAFP(c.getAFP());
-            clientDB.setAmountAvailable(c.getAmountAvailable());
-            log.info("Se vinculó correctamente al cliente en el AFP");
-            LOGGER.info("No se encuentra registrado el cliente {}");
-            return repository.save(clientDB);
-        }else {
-            log.error("No se encuentra registrado el cliente {}");
-            LOGGER.error("No se encuentra registrado el cliente {}");
+        List<Client> clientDNI = repository.getClientForDNI(c.getDNI().intValue());
+        Client[] ArrayClient = clientDNI.toArray(new Client[0]);
+            if(ArrayClient[0].getDNI().intValue() != c.getDNI().intValue())
+            {
+                if(c.getAFP().equals(ArrayClient[0].getAFP())){
+                    log.error("El usuario que intenta actualizar, ya tiene afiliado un AFP:   " + ArrayClient[0].getAFP().toString());
+                    throw new DataIntegrityViolationException("El usuario que intenta actualizar, ya tiene afiliado un AFP : " + ArrayClient[0].getAFP().toString()) ;
+                }
+                else{
+                    if(optionalClient.isPresent())
+                    {
+                        Client clientDB = optionalClient.get();
+                        clientDB.setFirstName(c.getFirstName());
+                        clientDB.setLastName(c.getLastName());
+                        clientDB.setDNI(c.getDNI());
+                        clientDB.setPhone(c.getPhone());
+                        clientDB.setEmail(c.getEmail());
+                        clientDB.setAFP(c.getAFP());
+                        clientDB.setAmountAvailable(c.getAmountAvailable());
+                        log.info("Se actualizo correctamente al cliente en el AFP");
+                        LOGGER.info("Se actualizo correctamente al cliente en el AFP");
+                        return repository.save(clientDB);
+                    }else {
+                        log.error("No se encuentra registrado el cliente {}");
+                        LOGGER.error("No se encuentra registrado el cliente {}");
+                    }
+                    return new Client();
+                    }
+                 }
+            else{
+                if(optionalClient.isPresent())
+                {
+                    Client clientDB = optionalClient.get();
+                    clientDB.setFirstName(c.getFirstName());
+                    clientDB.setLastName(c.getLastName());
+                    clientDB.setDNI(c.getDNI());
+                    clientDB.setPhone(c.getPhone());
+                    clientDB.setEmail(c.getEmail());
+                    clientDB.setAFP(c.getAFP());
+                    clientDB.setAmountAvailable(c.getAmountAvailable());
+                    log.info("Se actualizo correctamente al cliente en el AFP");
+                    LOGGER.info("Se actualizo correctamente al cliente en el AFP");
+                    return repository.save(clientDB);
+                }else {
+                    log.error("No se encuentra registrado el cliente {}");
+                    LOGGER.error("No se encuentra registrado el cliente {}");
+                }
+                return new Client();
+            }
         }
-        return new Client();
-    }
 
     @Override
     public void delete(Long id) throws Exception {
