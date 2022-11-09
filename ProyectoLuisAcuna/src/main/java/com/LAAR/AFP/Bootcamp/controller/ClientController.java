@@ -14,6 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -98,7 +99,7 @@ public class ClientController {
             @ApiResponse(responseCode = "404", description = "Parametros invalidos al registrar",
                     content = @Content) })
     @PostMapping("/create")
-    public Client create(@RequestBody Client client)throws Exception{
+    public Client create(@RequestBody @Valid Client client)throws Exception{
         return service.create(client);
     }
 
@@ -112,7 +113,7 @@ public class ClientController {
             @ApiResponse(responseCode = "404", description = "Parametros invalidos al actualizar",
                     content = @Content) })
     @PutMapping("/update/{id}")
-    public Client update(@PathVariable("id") Long id, @RequestBody Client client) throws Exception{
+    public Client update(@PathVariable("id") Long id, @RequestBody @Valid Client client) throws Exception{
         return service.update(client, id);
     }
     @Operation(summary = "Eliminación del registro de vinculación del cliente por ID")
