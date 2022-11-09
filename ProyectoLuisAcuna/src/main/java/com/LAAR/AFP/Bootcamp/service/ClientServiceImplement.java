@@ -36,7 +36,7 @@ public class ClientServiceImplement implements IClientService{
         Client[] ArrayClient = clientDNI.toArray(new Client[0]);
         if(ArrayClient.length>0)
         {
-            if(ArrayClient[0].getDNI().equals(c.getDNI()))
+            if(ArrayClient[0].getDNI().intValue() == c.getDNI().intValue())
             {
                 log.error("El usuario que intenta registrar, ya tiene afiliado un AFP:   " + ArrayClient[0].getAFP().toString());
                 throw new DataIntegrityViolationException("El usuario que intenta registrar, ya tiene afiliado un AFP : " + ArrayClient[0].getAFP().toString()) ;
@@ -93,9 +93,10 @@ public class ClientServiceImplement implements IClientService{
         Optional<Client> optionalClient = repository.findById(id);
         List<Client> clientDNI = repository.getClientForDNI(c.getDNI().intValue());
         Client[] ArrayClient = clientDNI.toArray(new Client[0]);
-            if(ArrayClient[0].getDNI().intValue() != c.getDNI().intValue())
+        if(ArrayClient.length>0){
+            if(id != ArrayClient[0].getIdClient())
             {
-                if(c.getAFP().equals(ArrayClient[0].getAFP())){
+                if(ArrayClient[0].getDNI().intValue() == c.getDNI().intValue()){
                     log.error("El usuario que intenta actualizar, ya tiene afiliado un AFP:   " + ArrayClient[0].getAFP().toString());
                     throw new DataIntegrityViolationException("El usuario que intenta actualizar, ya tiene afiliado un AFP : " + ArrayClient[0].getAFP().toString()) ;
                 }
@@ -118,8 +119,8 @@ public class ClientServiceImplement implements IClientService{
                         LOGGER.error("No se encuentra registrado el cliente {}");
                     }
                     return new Client();
-                    }
-                 }
+                }
+            }
             else{
                 if(optionalClient.isPresent())
                 {
@@ -140,6 +141,28 @@ public class ClientServiceImplement implements IClientService{
                 }
                 return new Client();
             }
+        }
+        else{
+            if(optionalClient.isPresent())
+            {
+                Client clientDB = optionalClient.get();
+                clientDB.setFirstName(c.getFirstName());
+                clientDB.setLastName(c.getLastName());
+                clientDB.setDNI(c.getDNI());
+                clientDB.setPhone(c.getPhone());
+                clientDB.setEmail(c.getEmail());
+                clientDB.setAFP(c.getAFP());
+                clientDB.setAmountAvailable(c.getAmountAvailable());
+                log.info("Se actualizo correctamente al cliente en el AFP");
+                LOGGER.info("Se actualizo correctamente al cliente en el AFP");
+                return repository.save(clientDB);
+            }else {
+                log.error("No se encuentra registrado el cliente {}");
+                LOGGER.error("No se encuentra registrado el cliente {}");
+            }
+            return new Client();
+        }
+
         }
 
     @Override
