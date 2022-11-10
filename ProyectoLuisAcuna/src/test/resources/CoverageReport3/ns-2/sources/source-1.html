@@ -1,0 +1,237 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > ClientController</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.LAAR.AFP.Bootcamp.controller</a>
+</div>
+
+<h1>Coverage Summary for Class: ClientController (com.LAAR.AFP.Bootcamp.controller)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ClientController</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/9)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/14)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.LAAR.AFP.Bootcamp.controller;
+&nbsp;
+&nbsp;import com.LAAR.AFP.Bootcamp.entities.Client;
+&nbsp;import com.LAAR.AFP.Bootcamp.service.IClientService;
+&nbsp;import io.reactivex.Flowable;
+&nbsp;import io.reactivex.Maybe;
+&nbsp;import io.swagger.v3.oas.annotations.Operation;
+&nbsp;import io.swagger.v3.oas.annotations.media.Content;
+&nbsp;import io.swagger.v3.oas.annotations.media.Schema;
+&nbsp;import io.swagger.v3.oas.annotations.responses.ApiResponse;
+&nbsp;import io.swagger.v3.oas.annotations.responses.ApiResponses;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.http.MediaType;
+&nbsp;import org.springframework.http.ResponseEntity;
+&nbsp;import org.springframework.web.bind.annotation.*;
+&nbsp;
+&nbsp;import javax.validation.Valid;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;@RestController
+&nbsp;@RequestMapping(&quot;/laar-afp&quot;)
+<b class="nc">&nbsp;public class ClientController {</b>
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private IClientService service;
+&nbsp;
+&nbsp;    @Operation(summary = &quot;Listar todas las solicitudes de vinculación de los clientes&quot;)
+&nbsp;    @ApiResponses(value = {
+&nbsp;            @ApiResponse(responseCode = &quot;200&quot;, description = &quot;Se listaron todos los clientes&quot;,
+&nbsp;                    content = { @Content(mediaType = &quot;application/json&quot;,
+&nbsp;                            schema = @Schema(implementation = Client.class)) }),
+&nbsp;            @ApiResponse(responseCode = &quot;400&quot;, description = &quot;Parametros invalidos&quot;,
+&nbsp;                    content = @Content),
+&nbsp;            @ApiResponse(responseCode = &quot;404&quot;, description = &quot;No se encontraron registros&quot;,
+&nbsp;                    content = @Content) })
+&nbsp;    @GetMapping(&quot;/findAll&quot;)
+&nbsp;    public Maybe&lt;ResponseEntity&lt;Flowable&lt;Client&gt;&gt;&gt; list(){
+<b class="nc">&nbsp;        return Maybe.just(</b>
+<b class="nc">&nbsp;                ResponseEntity.ok()</b>
+<b class="nc">&nbsp;                        .contentType(MediaType.APPLICATION_JSON)</b>
+<b class="nc">&nbsp;                        .body(service.findAll())</b>
+&nbsp;        );
+&nbsp;    }
+&nbsp;
+&nbsp;    @Operation(summary = &quot;Listar registro de vinculación del clientes por Id&quot;)
+&nbsp;    @ApiResponses(value = {
+&nbsp;            @ApiResponse(responseCode = &quot;200&quot;, description = &quot;Se encontro el cliente registrado por id&quot;,
+&nbsp;                    content = { @Content(mediaType = &quot;application/json&quot;,
+&nbsp;                            schema = @Schema(implementation = Client.class)) }),
+&nbsp;            @ApiResponse(responseCode = &quot;400&quot;, description = &quot;Parametros invalidos&quot;,
+&nbsp;                    content = @Content),
+&nbsp;            @ApiResponse(responseCode = &quot;404&quot;, description = &quot;No se encontraron registros del cliente&quot;,
+&nbsp;                    content = @Content) })
+&nbsp;    @GetMapping(&quot;/findId/{id}&quot;)
+&nbsp;    //public Maybe&lt;Client&gt; findId(@PathVariable(&quot;id&quot;) Integer id) throws  Exception{
+&nbsp;    //    return service.findId(id);
+&nbsp;    //}
+&nbsp;    public Maybe&lt;ResponseEntity&lt;Client&gt;&gt; get(@PathVariable Long id) throws Exception {
+<b class="nc">&nbsp;        return service.findById(id).map(p -&gt; ResponseEntity.ok()</b>
+<b class="nc">&nbsp;                        .contentType(MediaType.APPLICATION_JSON)</b>
+<b class="nc">&nbsp;                        .body(p))</b>
+<b class="nc">&nbsp;                .defaultIfEmpty(ResponseEntity.notFound().build());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Operation(summary = &quot;Listar todos las vinculaciones de los clientes por su AFP&quot;)
+&nbsp;    @ApiResponses(value = {
+&nbsp;            @ApiResponse(responseCode = &quot;200&quot;, description = &quot;Se encontro el cliente registrado asociado a su AFP&quot;,
+&nbsp;                    content = { @Content(mediaType = &quot;application/json&quot;,
+&nbsp;                            schema = @Schema(implementation = Client.class)) }),
+&nbsp;            @ApiResponse(responseCode = &quot;400&quot;, description = &quot;Parametros invalidos&quot;,
+&nbsp;                    content = @Content),
+&nbsp;            @ApiResponse(responseCode = &quot;404&quot;, description = &quot;No se encontraron registros del cliente asociado a su AFP&quot;,
+&nbsp;                    content = @Content) })
+&nbsp;    @GetMapping(&quot;/ClientForAFP/{AFP}&quot;)
+&nbsp;    public List&lt;Client&gt; getClientForAFP(@PathVariable(&quot;AFP&quot;) String AFP) throws  Exception{
+<b class="nc">&nbsp;        return service.getClientForAFP(AFP);</b>
+&nbsp;    }
+&nbsp;    @Operation(summary = &quot;Listar registro de vinculación del clientes por DNI&quot;)
+&nbsp;    @ApiResponses(value = {
+&nbsp;            @ApiResponse(responseCode = &quot;200&quot;, description = &quot;Se encontro el cliente registrado por DNI&quot;,
+&nbsp;                    content = { @Content(mediaType = &quot;application/json&quot;,
+&nbsp;                            schema = @Schema(implementation = Client.class)) }),
+&nbsp;            @ApiResponse(responseCode = &quot;400&quot;, description = &quot;Parametros invalidos&quot;,
+&nbsp;                    content = @Content),
+&nbsp;            @ApiResponse(responseCode = &quot;404&quot;, description = &quot;No se encontraron registros del cliente por DNI&quot;,
+&nbsp;                    content = @Content) })
+&nbsp;    @GetMapping(&quot;/ClientForDNI/{DNI}&quot;)
+&nbsp;    public List&lt;Client&gt; getClientForDNI(@PathVariable(&quot;DNI&quot;) Integer DNI) throws  Exception{
+<b class="nc">&nbsp;        return service.getClientForDNI(DNI);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Operation(summary = &quot;Creación del registro de vinculación del cliente para el AFP&quot;)
+&nbsp;    @ApiResponses(value = {
+&nbsp;            @ApiResponse(responseCode = &quot;200&quot;, description = &quot;Se creo el registro de la vinculación del cliente de forma exitosa&quot;,
+&nbsp;                    content = { @Content(mediaType = &quot;application/json&quot;,
+&nbsp;                            schema = @Schema(implementation = Client.class)) }),
+&nbsp;            @ApiResponse(responseCode = &quot;400&quot;, description = &quot;Cliente no se pudo registrar de forma correcta&quot;,
+&nbsp;                    content = @Content),
+&nbsp;            @ApiResponse(responseCode = &quot;404&quot;, description = &quot;Parametros invalidos al registrar&quot;,
+&nbsp;                    content = @Content) })
+&nbsp;    @PostMapping(&quot;/create&quot;)
+&nbsp;    public Client create(@RequestBody @Valid Client client)throws Exception{
+<b class="nc">&nbsp;        return service.create(client);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Operation(summary = &quot;Actualización del registro de vinculación del cliente para el AFP&quot;)
+&nbsp;    @ApiResponses(value = {
+&nbsp;            @ApiResponse(responseCode = &quot;200&quot;, description = &quot;Se actualizo el registro de la vinculación del cliente de forma exitosa&quot;,
+&nbsp;                    content = { @Content(mediaType = &quot;application/json&quot;,
+&nbsp;                            schema = @Schema(implementation = Client.class)) }),
+&nbsp;            @ApiResponse(responseCode = &quot;400&quot;, description = &quot;Cliente no se pudo actuualizar de forma correcta&quot;,
+&nbsp;                    content = @Content),
+&nbsp;            @ApiResponse(responseCode = &quot;404&quot;, description = &quot;Parametros invalidos al actualizar&quot;,
+&nbsp;                    content = @Content) })
+&nbsp;    @PutMapping(&quot;/update/{id}&quot;)
+&nbsp;    public Client update(@PathVariable(&quot;id&quot;) Long id, @RequestBody @Valid Client client) throws Exception{
+<b class="nc">&nbsp;        return service.update(client, id);</b>
+&nbsp;    }
+&nbsp;    @Operation(summary = &quot;Eliminación del registro de vinculación del cliente por ID&quot;)
+&nbsp;    @ApiResponses(value = {
+&nbsp;            @ApiResponse(responseCode = &quot;200&quot;, description = &quot;Se elimino el registro de la vinculación del cliente de forma exitosa&quot;,
+&nbsp;                    content = { @Content(mediaType = &quot;application/json&quot;,
+&nbsp;                            schema = @Schema(implementation = Client.class)) }),
+&nbsp;            @ApiResponse(responseCode = &quot;400&quot;, description = &quot;Cliente no se pudo eliminar de forma correcta&quot;,
+&nbsp;                    content = @Content),
+&nbsp;            @ApiResponse(responseCode = &quot;404&quot;, description = &quot;Parametros invalidos al eliminar&quot;,
+&nbsp;                    content = @Content) })
+&nbsp;    @DeleteMapping(&quot;/delete/{id}&quot;)
+&nbsp;    public void delete(@PathVariable(&quot;id&quot;) Long id) throws Exception{
+<b class="nc">&nbsp;          service.delete(id);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-11-10 14:26</div>
+</div>
+</body>
+</html>

@@ -16,11 +16,14 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -39,16 +42,7 @@ public class ClientServiceImplMockTest {
 
     @BeforeEach
     void setUp() throws IOException {
-        Client clientPrueba = TestUtil.readFile("client-ok","mocks", Client.class);
-
-        clientSave = new Client();
-        clientSave.setFirstName(clientPrueba.getFirstName());
-        clientSave.setLastName(clientPrueba.getLastName());
-        clientSave.setDNI(clientPrueba.getDNI());
-        clientSave.setPhone(clientPrueba.getPhone());
-        clientSave.setEmail(clientPrueba.getEmail());
-        clientSave.setAFP(clientPrueba.getAFP());
-        clientSave.setAmountAvailable(clientPrueba.getAmountAvailable());
+        clientSave = TestUtil.readFile("client-ok","mocks", Client.class);
 
     }
 
@@ -92,8 +86,46 @@ public class ClientServiceImplMockTest {
     @DisplayName("Prueba de una registro de cliente")
     @Test
     public void save() throws Exception {
+        List<Client> clientDNI = new ArrayList<>();
+        when(clientRepository.getClientForDNI(any())).thenReturn(clientDNI);
         when(clientRepository.save(any(Client.class))).thenReturn(clientSave);
-        assertNotNull(clientService.create(new Client()));
+        assertNotNull(clientService.create(clientSave));
     }
+
+    @DisplayName("Prueba de una registro de cliente existe")
+    @Test
+    public void saveClientExist() throws Exception {
+
+        try{
+            List<Client> clientDNI = new ArrayList<>();
+            clientDNI.add(clientSave);
+            when(clientRepository.getClientForDNI(any())).thenReturn(clientDNI);
+            clientService.create(clientSave);
+        }catch(DataIntegrityViolationException ex) {
+            assertEquals(ex.getMessage(),"El usuario que intenta registrar, ya tiene afiliado un AFP : AFP PRIMA");
+        }
+
+    }
+
+    @DisplayName("Prueba de un listado por DNI")
+    @Test
+    public void findDNI() throws Exception {
+        client = TestUtil.readFile("client-search-id-null","mocks", Client.class);
+        List<Client> clientDNI = new ArrayList<>();
+        clientDNI.add(client);
+        when(clientRepository.getClientForDNI(any())).thenReturn(clientDNI);
+        assertNotNull(clientService.getClientForDNI(client.getDNI().intValue()));
+    }
+
+    @DisplayName("Prueba de un listado por AFP")
+    @Test
+    public void findAFP() throws Exception {
+        client = TestUtil.readFile("client-search-id-null","mocks", Client.class);
+        List<Client> clientAFP = new ArrayList<>();
+        clientAFP.add(client);
+        when(clientRepository.getClientForAFP(any())).thenReturn(clientAFP);
+        assertNotNull(clientService.getClientForAFP(client.getAFP()));
+    }
+
 
 }

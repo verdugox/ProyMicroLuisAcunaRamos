@@ -36,16 +36,9 @@ public class ClientServiceImplement implements IClientService{
         Client[] ArrayClient = clientDNI.toArray(new Client[0]);
         if(ArrayClient.length>0)
          {
-             if(ArrayClient[0].getDNI().intValue() == c.getDNI().intValue())
-            {
-                log.error("El usuario que intenta registrar, ya tiene afiliado un AFP:   " + ArrayClient[0].getAFP().toString());
-               throw new DataIntegrityViolationException("El usuario que intenta registrar, ya tiene afiliado un AFP : " + ArrayClient[0].getAFP().toString()) ;
-           }
-            else{
-               log.info("Se realizo el registro exitosamente");
-               return repository.save(c);
-           }
-        }
+            log.error("El usuario que intenta registrar, ya tiene afiliado un AFP:   " + ArrayClient[0].getAFP().toString());
+            throw new DataIntegrityViolationException("El usuario que intenta registrar, ya tiene afiliado un AFP : " + ArrayClient[0].getAFP().toString()) ;
+         }
           else{
             return repository.save(c);
          }
